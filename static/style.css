@@ -1,7 +1,7 @@
 body {
     font-family: "Segoe UI", Arial, sans-serif;
     background: #f4f4f8;
-    max-width: 700px;
+    max-width: 800px;
     margin: 40px auto;
     padding: 20px;
     background-color: #fff;
@@ -19,7 +19,7 @@ h2 {
     color: #4a4a4a;
 }
 
-.credit-form {
+.credit-form, .filter-form {
     display: flex;
     gap: 10px;
     justify-content: center;
@@ -27,14 +27,14 @@ h2 {
     flex-wrap: wrap;
 }
 
-.credit-form input, .credit-form button {
+.credit-form input, .credit-form button, .filter-form input, .filter-form button {
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 14px;
 }
 
-.credit-form button {
+.credit-form button, .filter-form button {
     background-color: #2a9d8f;
     color: white;
     border: none;
@@ -42,7 +42,7 @@ h2 {
     transition: background 0.2s;
 }
 
-.credit-form button:hover {
+.credit-form button:hover, .filter-form button:hover {
     background-color: #23867a;
 }
 
@@ -80,6 +80,19 @@ button.delete:hover {
     text-align: right;
     font-size: 1.1em;
     color: #333;
+}
+
+.btn-export {
+    background-color: #457b9d;
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.btn-export:hover {
+    background-color: #356180;
 }
 
 
