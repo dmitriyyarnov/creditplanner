@@ -9,14 +9,12 @@ import io
 
 app = FastAPI(title="Credit Planner")
 
-# Подключаем статику и шаблоны
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 DB_PATH = "db.sqlite3"
 
 
-# --- Инициализация базы ---
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -38,7 +36,6 @@ def init_db():
 init_db()
 
 
-# --- Главная страница ---
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, month: str = Query(None)):
     conn = sqlite3.connect(DB_PATH)
@@ -54,7 +51,6 @@ def index(request: Request, month: str = Query(None)):
     filtered = [cr for cr in credits if cr[3].startswith(month)]
     total_month = sum(cr[2] for cr in filtered)
 
-    # Суммы по месяцам для графика
     monthly_totals = {}
     for _, _, amount, due_date, _ in credits:
         ym = due_date[:7]
@@ -69,7 +65,6 @@ def index(request: Request, month: str = Query(None)):
     })
 
 
-# --- Добавление кредита ---
 @app.post("/add")
 def add_credit(
     name: str = Form(...),
@@ -86,7 +81,6 @@ def add_credit(
     return RedirectResponse(url="/", status_code=303)
 
 
-# --- Удаление кредита ---
 @app.post("/delete/{credit_id}")
 def delete_credit(credit_id: int):
     conn = sqlite3.connect(DB_PATH)
@@ -97,7 +91,6 @@ def delete_credit(credit_id: int):
     return RedirectResponse(url="/", status_code=303)
 
 
-# --- Экспорт Excel ---
 @app.get("/export/xlsx")
 def export_xlsx():
     conn = sqlite3.connect(DB_PATH)
