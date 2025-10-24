@@ -13,7 +13,7 @@ app = FastAPI(title="Credit Planner")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-DB_PATH = "db.sqlite"
+DB_PATH = "db.sqlite3"
 
 
 # --- Инициализация базы ---
@@ -97,19 +97,6 @@ def delete_credit(credit_id: int):
     return RedirectResponse(url="/", status_code=303)
 
 
-# --- Экспорт CSV ---
-@app.get("/export/csv")
-def export_csv():
-    conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query("SELECT * FROM credits", conn)
-    conn.close()
-    buffer = io.StringIO()
-    df.to_csv(buffer, index=False)
-    buffer.seek(0)
-    return StreamingResponse(buffer, media_type="text/csv",
-                             headers={"Content-Disposition": "attachment; filename=credits.csv"})
-
-
 # --- Экспорт Excel ---
 @app.get("/export/xlsx")
 def export_xlsx():
@@ -120,9 +107,12 @@ def export_xlsx():
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Credits")
     buffer.seek(0)
-    return StreamingResponse(buffer,
-                             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                             headers={"Content-Disposition": "attachment; filename=credits.xlsx"})
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": "attachment; filename=credits.xlsx"}
+    )
+
 
 
 
