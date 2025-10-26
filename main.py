@@ -126,5 +126,3 @@ def index(request: Request, month: str = Query(None)):
         "month": month,
         "monthly_totals": monthly_totals
     })
-
-
