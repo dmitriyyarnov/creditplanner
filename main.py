@@ -128,7 +128,3 @@ def index(request: Request, month: str = Query(None)):
     })
 
 
-
-
-
-
