@@ -53,12 +53,12 @@
         <strong>Итого за {{ month }}: {{ "%.2f"|format(total_month) }} ₽</strong>
     </div>
 
-    <h2>График платежей по месяцам</h2>
-    <div id="chart" style="width:100%; height:400px;"></div>
+    <h2>График платежей за {{ month }}</h2>
+<div id="chart" style="width:100%; height:400px;"></div>
 
     <script>
         const data = {{ monthly_totals | tojson }};
-        const months = Object.keys(data);
+        const months = Object.keys(data);  // будет только один месяц, например "2025-10"
         const amounts = Object.values(data);
 
         const trace = {
@@ -69,8 +69,8 @@
         };
 
         const layout = {
-            title: 'Сумма кредитов по месяцам',
-            xaxis: {title: 'Месяц'},
+            title: 'Сумма кредитов за выбранный месяц',
+            xaxis: {title: 'Месяц', type: 'category'}, // тип "category" — текст
             yaxis: {title: 'Сумма (₽)'},
             margin: {t: 50, b: 50}
         };
@@ -83,6 +83,8 @@
     </footer>
 </body>
 </html>
+
+
 
 
 

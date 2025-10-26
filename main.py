@@ -12,7 +12,7 @@ app = FastAPI(title="Credit Planner")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-DB_PATH = "db2.sqlite3"
+DB_PATH = "db.sqlite3"
 
 
 def init_db():
@@ -48,14 +48,19 @@ def index(request: Request, month: str = Query(None)):
     if not month:
         month = now.strftime("%Y-%m")
 
+    # Фильтруем кредиты только за выбранный месяц
     filtered = [cr for cr in credits if cr[3].startswith(month)]
     total_month = sum(cr[2] for cr in filtered)
+
+    # Для графика — один бар с суммой за месяц
+    monthly_totals = {month: total_month}
 
     return templates.TemplateResponse("index.html", {
         "request": request,
         "credits": filtered,
         "total_month": total_month,
-        "month": month
+        "month": month,
+        "monthly_totals": monthly_totals
     })
 
 
@@ -101,29 +106,4 @@ def export_xlsx():
     )
 
 
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request, month: str = Query(None)):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT id, name, amount, due_date, comment FROM credits ORDER BY due_date")
-    credits = c.fetchall()
-    conn.close()
 
-    now = datetime.now()
-    if not month:
-        month = now.strftime("%Y-%m")
-
-    filtered = [cr for cr in credits if cr[3].startswith(month)]
-    total_month = sum(cr[2] for cr in filtered)
-    monthly_totals = {}
-    for _, _, amount, due_date, _ in credits:
-        ym = due_date[:7]
-        monthly_totals[ym] = monthly_totals.get(ym, 0) + amount
-
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "credits": filtered,
-        "total_month": total_month,
-        "month": month,
-        "monthly_totals": monthly_totals
-    })
