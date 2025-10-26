@@ -114,7 +114,6 @@ def index(request: Request, month: str = Query(None)):
 
     filtered = [cr for cr in credits if cr[3].startswith(month)]
     total_month = sum(cr[2] for cr in filtered)
-
     monthly_totals = {}
     for _, _, amount, due_date, _ in credits:
         ym = due_date[:7]
