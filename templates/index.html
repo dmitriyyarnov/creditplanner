@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Credit Planner</title>
     <link rel="stylesheet" href="/static/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <h1>Credit Planner — планировщик кредитов</h1>
@@ -54,33 +54,39 @@
     </div>
 
     <h2>График платежей по месяцам</h2>
-    <canvas id="chart"></canvas>
+    <div id="chart" style="width:100%; height:400px;"></div>
 
     <script>
         const data = {{ monthly_totals | tojson }};
-        const ctx = document.getElementById('chart').getContext('2d');
-        new Chart(ctx, {
+        const months = Object.keys(data);
+        const amounts = Object.values(data);
+
+        const trace = {
+            x: months,
+            y: amounts,
             type: 'bar',
-            data: {
-                labels: Object.keys(data),
-                datasets: [{
-                    label: 'Сумма кредитов, ₽',
-                    data: Object.values(data),
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
+            marker: {color: 'rgba(54, 162, 235, 0.6)'}
+        };
+
+        const layout = {
+            title: 'Сумма кредитов по месяцам',
+            xaxis: {title: 'Месяц'},
+            yaxis: {title: 'Сумма (₽)'},
+            margin: {t: 50, b: 50}
+        };
+
+        Plotly.newPlot('chart', [trace], layout, {responsive: true});
     </script>
+
     <footer>
-    <p>© 2025 Credit Planner</p>
+        <p>© 2025 Credit Planner</p>
     </footer>
 </body>
 </html>
+
+
+
+
+
+
+

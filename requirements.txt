@@ -1,6 +1,10 @@
 fastapi
-uvicorn
+uvicorn[standard]
 jinja2
 pandas
 openpyxl
-python-multipart
+plotly
+
+
+
+
