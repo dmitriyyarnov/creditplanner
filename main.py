@@ -100,6 +100,7 @@ def export_xlsx():
         headers={"Content-Disposition": "attachment; filename=credits.xlsx"}
     )
 
+
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, month: str = Query(None)):
     conn = sqlite3.connect(DB_PATH)
