@@ -1,19 +1,17 @@
 from fastapi import FastAPI, Form, Request, Query
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from datetime import datetime
 import sqlite3
 import pandas as pd
 import io
 import calendar
 
+# Импорт из config.py
+from config import static_files, templates, DB_PATH
+
 app = FastAPI(title="Credit Planner")
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-
-DB_PATH = "db.sqlite3"
+app.mount("/static", static_files, name="static")
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -129,6 +127,7 @@ def export_xlsx():
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": "attachment; filename=credits.xlsx"}
     )
+
 
 
 
