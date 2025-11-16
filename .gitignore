@@ -1,0 +1,13 @@
+__pycache__/
+*.log
+venv/
+env/
+ENV/
+.venv/
+.idea/
+*.sqlite
+*.db
+*.cache
+*.tmp
+*.bak
+*.pytest_cache/
